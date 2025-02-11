@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: "2010-09-02"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Region:
+    Type: String
+    Default: us-west-2
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Environment:
+      Variables:
+        PYTHONUNBUFFERED: 1
+        AWS_REGION: !Ref Region
+
+Resources:
+  EssayCheckerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: backend.app.main.app
+      Runtime: python3.11
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt EssayQueue.Arn
+            BatchSize: 1
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+  EssayQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: essay-evaluation-queue
+      VisibilityTimeout: 60
+
+Outputs:
+  EssayCheckerApi:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/"
+  EssayQueueUrl:
+    Description: "SQS Queue URL"
+    Value: !GetAtt EssayQueue.Url

@@ -1,0 +1,50 @@
+name: fastapi-backends
+
+services:
+  web:
+    image: fastapi-backends/groucho-api
+    container_name: groucho-api
+    build: .
+    ports:
+      - "8020:8020"
+    env_file:
+      - .env
+    volumes:
+      - ./app:/var/task/app
+      - ./alembic:/var/task/alembic
+      - ./tests:/var/task/tests
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres-main:5432/groucho-new
+      - USE_LOCALSTACK=True
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_API_KEY_IELTS=${RESEND_API_KEY_IELTS}
+      - RESEND_API_KEY_CAMBRIDGE=${RESEND_API_KEY_CAMBRIDGE}
+      - RESEND_API_KEY_PTE=${RESEND_API_KEY_PTE}
+      - RESEND_API_KEY_TOEFL=${RESEND_API_KEY_TOEFL}
+    depends_on:
+      - localstack
+    networks:
+      - groucho-network
+      - postgres-network
+    command: [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8020", "--reload", "--log-level", "debug" ]
+
+  localstack:
+    image: localstack/localstack
+    container_name: groucho-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - DEFAULT_REGION=us-west-2
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    networks:
+      - groucho-network
+      - postgres-network
+
+networks:
+  groucho-network:
+    name: groucho-network
+    driver: bridge
+  postgres-network:
+    external: true

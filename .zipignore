@@ -1,0 +1,109 @@
+# Root level ignores
+.DS_Store
+.vscode/
+*.log
+.env
+.history
+.history/*
+
+# Frontend ignores
+**/node_modules/
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/pnpm-lock.yaml
+
+# Backend ignores
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/*.so
+backend/.Python
+backend/env/
+backend/venv/
+backend/ENV/
+backend/.env
+backend/.venv
+backend/pip-log.txt
+backend/pip-delete-this-directory.txt
+
+# IDE specific (common for both)
+.idea/
+*.sublime-workspace
+
+# System Files
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Database files
+*.sqlite
+*.db
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Upload directories
+backend/app/uploads/pdfs/*
+backend/app/uploads/temp/*
+# Keep directories but ignore contents
+!backend/app/uploads/pdfs/.gitkeep
+!backend/app/uploads/temp/.gitkeep
+
+# CDK-specific ignores
+cdk.out/
+.cdk.staging/
+cdk.context.json
+*.js
+!jest.config.js
+*.d.ts
+node_modules/
+tsconfig.tsbuildinfo
