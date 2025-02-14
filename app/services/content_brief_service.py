@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from sqlalchemy.orm import Session
 from app.models.content_brief import ContentBrief
 from fastapi import Depends, HTTPException, Path
 from ..dependencies import get_db
 from .content_service import create_empty_content
+from sqlmodel import select
 
 def create(db: Session, content_brief: ContentBrief) -> ContentBrief:
     """Create a new content brief"""
@@ -11,8 +12,8 @@ def create(db: Session, content_brief: ContentBrief) -> ContentBrief:
         content_id = get_or_create_content_id(db=db, content_brief=content_brief, user_id=content_brief.user_id)
         content_brief.content_id = content_id
         
-        content_brief.created_at = datetime.utcnow()
-        content_brief.updated_at = datetime.utcnow()
+        content_brief.created_at = datetime.now(UTC)
+        content_brief.updated_at = datetime.now(UTC)
 
         db.add(content_brief)
         db.commit()
@@ -28,9 +29,7 @@ def get_content_brief_by_id(
     content_brief_id: int = Path(...),
 ) -> ContentBrief:
     """Get a content brief by its ID"""
-    content_brief = db.query(ContentBrief).filter(
-        ContentBrief.id == content_brief_id
-    ).first()
+    content_brief = db.exec(select(ContentBrief).where(ContentBrief.id == content_brief_id)).first()
     
     if not content_brief:
         raise HTTPException(status_code=404, detail="Content brief not found")
