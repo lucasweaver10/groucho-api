@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, HTTPException, Depends, Form
 from sqlalchemy.orm import Session
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, UTC
 import shutil
 import uuid
 import aiofiles
@@ -115,7 +115,7 @@ def upload_file(
             file_size=permanent_path.stat().st_size,
             mime_type=file.content_type,
             description=description,
-            upload_date=datetime.utcnow()
+            upload_date=datetime.now(UTC)
         )
         
         db.add(upload)
