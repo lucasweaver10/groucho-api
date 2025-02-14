@@ -1,5 +1,5 @@
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, UTC
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, JSON
 from enum import Enum
@@ -15,6 +15,6 @@ class Prompt(SQLModel, table=True):
     description: Optional[str] = None
     type: TypeEnum = Field(default=TypeEnum.user)
     prompt: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     

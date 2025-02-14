@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
@@ -12,6 +12,6 @@ class Upload(SQLModel, table=True):
     file_size: int
     mime_type: str
     description: Optional[str] = None
-    upload_date: datetime = Field(default_factory=datetime.utcnow)
+    upload_date: datetime = Field(default_factory=lambda: datetime.now(UTC))
     
     # Remove the relationship with User but keep the foreign key 

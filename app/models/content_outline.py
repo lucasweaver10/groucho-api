@@ -1,5 +1,5 @@
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, UTC
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, JSON
 
@@ -14,8 +14,8 @@ class ContentOutline(SQLModel, table=True):
         default_factory=dict, sa_column=Column(JSON)
     )
     content_brief_id: int = Field(foreign_key="content_briefs.id")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     content_brief: "ContentBrief" = Relationship(back_populates="outline")
     content_outline_sections: List["ContentOutlineSection"] = Relationship(back_populates="content_outline")
