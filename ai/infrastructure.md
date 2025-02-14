@@ -58,7 +58,7 @@ Key testing components:
   - Test user creation
   - Test submission creation
   - FastAPI TestClient setup
-- test_submissions.py: Tests submission creation and SQS integration
+- test_contents.py: Tests submission creation and SQS integration
 - test_evaluations.py: Tests evaluation endpoints with mocked AI service
 
 Run tests through Docker:
