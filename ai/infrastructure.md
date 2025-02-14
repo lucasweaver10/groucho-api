@@ -9,11 +9,11 @@ Two main containers:
   - Container: postgres-main
   - Port Mapping: 5432:5432
   - Credentials:
-    - Database: groucho-new
+    - Database: agentgroucho
     - Username: postgres
     - Password: postgres
   - Connection String:
-    - `DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/groucho-new"`
+    - `DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/agentgroucho"`
   - SQLModel and SQLAlchemy are used for ORM and database interactions
   - Connection pooling is configured with `pool_pre_ping` and `pool_recycle` settings
 
@@ -24,7 +24,7 @@ Docker commands:
   docker compose exec fastapi alembic upgrade head
 
 Connecting via docker:
-  docker exec -it postgres-main psql -U postgres -d groucho-new
+  docker exec -it postgres-main psql -U postgres -d agentgroucho
 
 View logs:
   docker compose logs -f fastapi
@@ -37,7 +37,7 @@ Run migrations through Docker:
   docker exec -it groucho-api alembic upgrade head
 
 The database connection string in the app uses the Docker network name:
-  DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/groucho-new"
+  DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/agentgroucho"
 
 # Deployment
 
@@ -48,8 +48,8 @@ The database connection string in the app uses the Docker network name:
 
 The test suite uses pytest with a dedicated test database:
 - Test Database:
-  - Name: groucho-new
-  - Connection: `postgresql://postgres:postgres@postgres-main:5432/groucho-new-test`
+  - Name: agentgroucho
+  - Connection: `postgresql://postgres:postgres@postgres-main:5432/agentgroucho_test`
   - Automatically cleaned up between tests
 
 Key testing components:

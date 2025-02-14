@@ -14,7 +14,7 @@ services:
       - ./alembic:/var/task/alembic
       - ./tests:/var/task/tests
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres-main:5432/groucho-new
+      - DATABASE_URL=postgresql://postgres:postgres@postgres-main:5432/agentgroucho
       - USE_LOCALSTACK=True
       - RESEND_API_KEY=${RESEND_API_KEY}
       - RESEND_API_KEY_IELTS=${RESEND_API_KEY_IELTS}

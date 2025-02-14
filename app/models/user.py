@@ -20,9 +20,11 @@ class User(SQLModel, table=True):
     total_paid: float = Field(default=0.0)
 
     # Relationships
-    content_briefs: List["ContentBrief"] = Relationship(back_populates="user")
-    content_brief_templates: List["ContentBriefTemplate"] = Relationship(back_populates="user")
-    contents: List["Content"] = Relationship(back_populates="user")
+    content_briefs: List["ContentBrief"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
+    content_brief_templates: List["ContentBriefTemplate"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
+    contents: List["Content"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
+    content_series: List["ContentSeries"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
+    content_outlines: List["ContentOutline"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
 
     def has_premium_access(self) -> bool:
         """

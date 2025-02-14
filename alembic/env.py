@@ -3,15 +3,19 @@ import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+import sqlmodel
 from app.models.user import User
 from app.models.content_brief_template import ContentBriefTemplate
 from app.models.content_brief import ContentBrief
+from app.models.content_series import ContentSeries
 from app.models.content import Content
+from app.models.content_section import ContentSection
 from app.models.content_outline import ContentOutline
 from app.models.content_outline_section import ContentOutlineSection
 from app.models.ai_model import AIModel
 from app.models.ai_provider import AIProvider
 from app.models.prompt import Prompt
+from app.models.upload import Upload
 from sqlmodel import SQLModel
 
 target_metadata = SQLModel.metadata

@@ -10,7 +10,7 @@ from .auth import create_access_token, get_current_user
 from .database import engine, get_db
 from sqlmodel import SQLModel
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, events, uploads, webhooks
+from .routers import auth, contents, content_briefs, content_sections, events, uploads, agents, webhooks
 from .auth import (
     get_current_user,
     create_access_token,
@@ -20,16 +20,10 @@ from contextlib import asynccontextmanager
 from .config import settings
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup logic
-    print("Starting up...")
-    # If you had any startup logic in your previous on_event("startup"),
-    # move it here
+async def lifespan(app: FastAPI):    
+    print("Starting up...")    
     yield
-    # Shutdown logic
-    print("Shutting down...")
-    # If you had any shutdown logic in your previous on_event("shutdown"),
-    # move it here
+    print("Shutting down...")    
 
 app = FastAPI(lifespan=lifespan)
 
@@ -42,13 +36,13 @@ logging.basicConfig(
     stream=sys.stdout
 )
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3007")
 
 # Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[        
-        os.getenv("FRONTEND_URL")
+        os.getenv("FRONTEND_URL", "http://localhost:3007")
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -76,7 +70,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 1440
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(events.router, prefix="/events", tags=["events"])
 app.include_router(uploads.router, prefix="/uploads", tags=["uploads"])
+app.include_router(agents.router, prefix="/agents", tags=["agents"])
 app.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
+app.include_router(contents.router, prefix="/contents", tags=["contents"])
+app.include_router(content_briefs.router, prefix="/content-briefs", tags=["content-briefs"])
+app.include_router(content_sections.router, prefix="/content-sections", tags=["content-sections"])
 
 @app.get("/")
 async def root():    
