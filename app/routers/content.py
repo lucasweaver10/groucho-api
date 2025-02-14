@@ -21,6 +21,16 @@ async def create_content(
         logger.error(f"Failed to create content: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create content")
 
+@router.get("/")
+async def get_all(
+    db: Session = Depends(get_db)
+):
+    try:
+        contents = content_service.get_all(db=db)
+        return contents
+    except Exception as e:
+        logger.error(f"Failed to get all contents: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get all contents")
 
 @router.get("/{content_id}")
 async def get(

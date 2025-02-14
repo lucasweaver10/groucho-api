@@ -10,7 +10,7 @@ from .auth import create_access_token, get_current_user
 from .database import engine, get_db
 from sqlmodel import SQLModel
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, contents, content_briefs, content_sections, events, uploads, agents, webhooks
+from .routers import auth, content, content_briefs, content_sections, events, uploads, agents, webhooks
 from .auth import (
     get_current_user,
     create_access_token,
@@ -72,7 +72,7 @@ app.include_router(events.router, prefix="/events", tags=["events"])
 app.include_router(uploads.router, prefix="/uploads", tags=["uploads"])
 app.include_router(agents.router, prefix="/agents", tags=["agents"])
 app.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
-app.include_router(contents.router, prefix="/contents", tags=["contents"])
+app.include_router(content.router, prefix="/contents", tags=["contents"])
 app.include_router(content_briefs.router, prefix="/content-briefs", tags=["content-briefs"])
 app.include_router(content_sections.router, prefix="/content-sections", tags=["content-sections"])
 
