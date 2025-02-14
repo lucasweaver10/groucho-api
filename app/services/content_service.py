@@ -1,6 +1,8 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from ..models.content import Content
+from sqlmodel import select
 
 def create(
     db: Session,
@@ -19,7 +21,7 @@ def get(
     db: Session,
     content_id: int
 ) -> Content:
-    content = db.query(Content).filter(Content.id == content_id).first()
+    content = db.exec(select(Content).filter(Content.id == content_id)).first()
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
     return content

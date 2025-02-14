@@ -5,8 +5,7 @@ from app.main import app
 from app.database import get_db
 from app.models.user import User
 from app.auth import create_access_token
-from app.models.submission import Submission
-from app.models.post import Post
+from app.models.content import Content
 import time
 import boto3
 from botocore.exceptions import ClientError
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 # Simple test DB setup
 @pytest.fixture
 def test_db():
-    DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/essay-checker-test"
+    DATABASE_URL = "postgresql://postgres:postgres@postgres-main:5432/agentgrouchotest"
     engine = create_engine(DATABASE_URL)
     SQLModel.metadata.create_all(engine)
     
@@ -66,29 +65,24 @@ def authorized_client(client, test_token):
     return client
 
 @pytest.fixture
-def test_submission_data(test_user):
+def test_content_data(test_user):
     """Returns submission data without saving to database"""
     return {
         "user_id": test_user.id,
-        "exam_type": "IELTS",
-        "exam_name": "Academic",
-        "essay_task": "Writing Task 2",
-        "essay_topic": "Test Topic",
-        "essay_content": "Test content",
-        "word_count": 250,
-        "ai_evaluation": True,
-        "human_evaluation": False,
-        "status": "submitted"
+        "type": "blog_post",
+        "title": "Test Content Title",
+        "description": "Test content description",
+        "text": "Test content is here.",        
     }
 
 @pytest.fixture
-def test_submission(test_db, test_submission_data):
+def test_content(test_db, test_content_data):
     """Creates and returns a test submission in the database"""
-    submission = Submission(**test_submission_data)
-    test_db.add(submission)
+    content = Content(**test_content_data)
+    test_db.add(content)
     test_db.commit()
-    test_db.refresh(submission)
-    return submission
+    test_db.refresh(content)
+    return content
 
 @pytest.fixture(scope="session", autouse=True)
 def ensure_localstack_ready():
@@ -119,46 +113,10 @@ def setup_sqs_queue(ensure_localstack_ready):
     )
     
     try:
-        sqs.create_queue(QueueName='essay-evaluation-queue')
+        sqs.create_queue(QueueName='agentgroucho-task-queue')
         logger.debug("SQS queue created successfully")
     except Exception as e:
         logger.error(f"Error creating queue: {e}")
         raise
         
     return sqs
-
-@pytest.fixture
-def test_evaluation_data(test_submission):
-    return {
-        "submission_id": test_submission.id,
-        "score": 7.5,
-        "feedback": "Good essay"
-    }
-
-@pytest.fixture
-def test_post_data():
-    """Returns post data without saving to database"""
-    return {
-        "site_id": 1,
-        "title": "Test Post",
-        "content": "This is test content",
-        "status": "published",
-        "type": "post",
-        "author_id": 1,
-        "user_id": 1,
-        "slug": "test-post",
-        "excerpt": "Test excerpt",
-        "meta_description": "Test meta description",
-        "featured_image_url": "https://example.com/image.jpg",
-        "published_date": datetime.utcnow(),
-        "published_date_gmt": datetime.utcnow()
-    }
-
-@pytest.fixture
-def test_post(test_db, test_post_data):
-    """Creates and returns a test post in the database"""
-    post = Post(**test_post_data)
-    test_db.add(post)
-    test_db.commit()
-    test_db.refresh(post)
-    return post
